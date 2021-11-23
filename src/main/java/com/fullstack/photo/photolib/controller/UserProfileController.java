@@ -1,7 +1,10 @@
-package com.fullstack.photo.photolib.profile;
+package com.fullstack.photo.photolib.controller;
 
+import com.fullstack.photo.photolib.profile.UserProfile;
+import com.fullstack.photo.photolib.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,8 +28,8 @@ public class UserProfileController {
         return "New User added";
     }
     @GetMapping
-    public List<UserProfile> getUserProfiles() {
-        return userProfileService.getUserProfiles();
+    public List<UserProfile> getAllUserProfiles() {
+        return userProfileService.getAllUserProfiles();
     }
 
     @PostMapping(
@@ -34,6 +37,7 @@ public class UserProfileController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @CrossOrigin("*")
     public void uploadUserProfileImage(@PathVariable("userProfileId") UUID userProfileId,
                                        @RequestParam("file") MultipartFile file) {
         userProfileService.uploadUserProfileImage(userProfileId, file);
@@ -43,5 +47,10 @@ public class UserProfileController {
     public byte[] downloadUserProfileImage(@PathVariable("userProfileId") UUID userProfileId) {
         return userProfileService.downloadUserProfileImage(userProfileId);
     }
+    @PutMapping(path= "/image/upload")
+    public UserProfile update(@RequestBody UserProfile userProfile){
+        return userProfileService.saveUserProfile(userProfile);
+    }
+
 
 }

@@ -1,10 +1,12 @@
-package com.fullstack.photo.photolib.profile;
+package com.fullstack.photo.photolib.service;
 
 import com.fullstack.photo.photolib.bucket.BucketName;
 import com.fullstack.photo.photolib.datastore.UserRepo;
 import com.fullstack.photo.photolib.filestore.FileStore;
+import com.fullstack.photo.photolib.profile.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -13,26 +15,21 @@ import java.util.*;
 import static org.apache.http.entity.ContentType.*;
 
 @Service
-public class UserProfileService implements UserServ{
+@CrossOrigin("*")
+public class UserProfileService implements UserServ {
 
     private final UserProfileDataAccessService userProfileDataAccessService;
     private final FileStore fileStore;
 
     @Autowired
     public UserProfileService(UserProfileDataAccessService userProfileDataAccessService,
-                              FileStore fileStore) {
+                              FileStore fileStore, UserRepo userRepo) {
         this.userProfileDataAccessService = userProfileDataAccessService;
         this.fileStore = fileStore;
+        this.userRepo = userRepo;
     }
-    @Autowired
-    private UserRepo userRepo;
-    @Autowired
-
-    List<UserProfile> getUserProfiles() {
-        return userProfileDataAccessService.getUserProfiles();
-    }
-
-    void uploadUserProfileImage(UUID userProfileId, MultipartFile file) {
+    private final UserRepo userRepo;
+    public void uploadUserProfileImage(UUID userProfileId, MultipartFile file) {
         // 1. Check if image is not empty
         isFileEmpty(file);
         // 2. If file is an image
@@ -51,13 +48,15 @@ public class UserProfileService implements UserServ{
         try {
             fileStore.save(path, filename, Optional.of(metadata), file.getInputStream());
             user.setUserProfileImageLink(filename);
+
+
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
 
     }
 
-    byte[] downloadUserProfileImage(UUID userProfileId) {
+    public byte[] downloadUserProfileImage(UUID userProfileId) {
         UserProfile user = getUserProfileOrThrow(userProfileId);
 
         String path = String.format("%s/%s",
@@ -99,6 +98,11 @@ public class UserProfileService implements UserServ{
         if (file.isEmpty()) {
             throw new IllegalStateException("Cannot upload empty file [ " + file.getSize() + "]");
         }
+    }
+
+    @Override
+    public List<UserProfile> getAllUserProfiles() {
+        return userRepo.findAll();
     }
 
     @Override

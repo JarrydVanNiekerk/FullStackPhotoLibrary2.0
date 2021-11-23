@@ -1,9 +1,6 @@
 package com.fullstack.photo.photolib.profile;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,6 +10,7 @@ import java.util.UUID;
 public class UserProfile {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID userProfileId;
     @Column(name = "Username")
     private String username;
@@ -74,4 +72,6 @@ public class UserProfile {
     public void setPassword(String password){
         this.password = password;
     }
+
+
 }

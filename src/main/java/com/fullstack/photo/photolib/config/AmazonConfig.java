@@ -7,6 +7,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.regions.Regions;
+
 
 @Configuration
 public class AmazonConfig {
@@ -14,12 +17,12 @@ public class AmazonConfig {
     @Bean
     public AmazonS3 s3() {
         AWSCredentials awsCredentials = new BasicAWSCredentials(
-          "AWSAccessKeyId=AKIATEPWWU3ADDZUV7GU",
-          "AWSSecretKey=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"
+          "AKIATEPWWU3AGQZ56FHP",
+          "hMIVLlQhep/Iu59386qRYufUFD5Nls83mWfxmbZ0"
         );
         return AmazonS3ClientBuilder
                 .standard()
-                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).withRegion("eu-central-1")
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).withRegion(Regions.US_EAST_2)
                 .build();
     }
 

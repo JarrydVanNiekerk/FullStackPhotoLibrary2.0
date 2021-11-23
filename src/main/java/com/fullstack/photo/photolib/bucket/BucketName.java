@@ -2,7 +2,7 @@ package com.fullstack.photo.photolib.bucket;
 
 public enum BucketName {
 //s3 bucket Name;
-    PROFILE_IMAGE("nwu-images-upload");
+    PROFILE_IMAGE("photos-lib");
 
     private final String bucketName;
 
